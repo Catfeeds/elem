@@ -26,8 +26,8 @@
                         <label for="inputEmail3" class="col-sm-2 control-label">店铺名</label>
 
                         <div class="col-sm-10">
-                         <select name="shop_category_id">
-                             <option value="">请选择店铺</option>
+                         <select name="shop_cate_id">
+                             <option value="">请选择店铺类别</option>
                              @foreach($cates as $cate)
                                  <option value="{{$cate->id}}">{{$cate->name}}</option>
 

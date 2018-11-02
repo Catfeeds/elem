@@ -16,3 +16,17 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get("shop/index","Api\ShopController@index");
+Route::any("shop/detail","Api\ShopController@detail");
+Route::get("member/sms","Api\MemberController@sms");
+Route::post("member/reg","Api\MemberController@reg");
+Route::post("member/login","Api\MemberController@login");
+Route::post("member/forget","Api\MemberController@forget");
+Route::post("member/change","Api\MemberController@change");
+Route::get("member/detail","Api\MemberController@detail");
+Route::post("address/add","Api\AddressController@add");
+Route::get("address/index","Api\AddressController@index");
+Route::post("address/edit","Api\AddressController@edit");
+Route::get("address/getOne","Api\AddressController@getOne");
+Route::post("cart/add","Api\CartController@add");
+Route::get("cart/index","Api\CartController@index");

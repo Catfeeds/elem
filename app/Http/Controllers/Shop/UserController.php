@@ -55,7 +55,7 @@ class UserController extends BaseController
 
             if (Auth::attempt($data)) {
                 //判断该用户是否有店铺
-                $user = Auth::user();   //Auth::user()=============User::find(2)
+                $user = Auth::user();
                 $shop = $user->shop;
                 //通过用户找店铺
                 if ($shop) {
@@ -78,6 +78,7 @@ class UserController extends BaseController
                 }
 
             }
+            return redirect()->route("shop.user.index")->with("danger", "登录成功");
         }
         //显示视图
         return view("shop.user.login");
@@ -119,7 +120,7 @@ class UserController extends BaseController
 //退出登录
     public function logout()
     {
-        Auth::guard()->logout();
+        Auth::logout();
         return redirect()->route("shop.user.index")->with("success", "退出登录成功");
     }
 

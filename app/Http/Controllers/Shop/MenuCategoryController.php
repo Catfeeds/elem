@@ -14,10 +14,10 @@ class MenuCategoryController extends BaseController
     //
     public function index()
     {
-        $id =Auth::user()->shop->id;
+//        $id =Auth::user()->shop->id;
 //        dd($id);
-        $menus=MenuCategory::where("shop_id",$id)->get();
-
+//        $menus=MenuCategory::where("shop_id",$id)->get();
+        $menus=MenuCategory::where("shop_id",Auth::user()->shop->id)->get();
 
         return view("shop.menu_category.index", compact('menus'));
 
@@ -34,7 +34,9 @@ class MenuCategoryController extends BaseController
         if ($request->isMethod("post")) {
             //数据验证
             $this->validate($request, [
-                "name" => "required|",
+                'name'=>'required',
+                'description'=>'required',
+                'is_selected'=>'required',
             ]);
 //              dd($data);
 //            $data["is_selected"]=$data["is_selected"];
@@ -43,15 +45,34 @@ class MenuCategoryController extends BaseController
 //                DB::table("menu_categories")->where("shop_id",)->update(["is_selected"=>0]);
 //
 //            }
-            if (MenuCategory::create($data)) {
-                session()->flash("success", "添加成功");
-                return redirect("/menuCate/index");
+            //name不能在本店铺重复
+            //当前用户
+            //得到shop_id
+            $shopId=Auth::user()->shop->id;
+            //得到重名的个数
+            $count=MenuCategory::where("shop_id",$shopId)->where('name',$request->post('name'))->count();
+            //判断
+            if ($count){
+                //如果存在 返回
+                return back()->with('danger',"已存在相同的名称")->withInput();
             }
-        } else {
+            //接收参数
+            $data=$request->all();
+            $data['shop_id']=$shopId;
+            //判断
+            if ($request->post('is_selected')) {
+                //把表里所的is_selected设置0
+                MenuCategory::where("is_selected", 1)->where('shop_id', $shopId)->update(['is_selected' => 0]);
+            }
+            //入库
+            MenuCategory::create($data);
+            //跳转并提示
+            return redirect()->route('shop.menuCate.index')->with('success',"添加成功");
+        }
 
             return view("shop.menu_category.add", compact('cates'));
 
-        }
+
     }
 
     //修改菜品分类

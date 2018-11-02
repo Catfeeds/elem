@@ -24,8 +24,9 @@ class ShopCategoryController extends BaseController
         if ($request->isMethod("post")) {
             //数据验证
             $this->validate($request, [
-                "name" => "required|",
+                "name" => "required|unique:shop_categories",
                 "img" => "required|",
+
             ]);
             //接收数
             $data['img'] = $request->file("img")->store("images", "image");
@@ -52,7 +53,7 @@ class ShopCategoryController extends BaseController
         if ($request->isMethod("post")) {
             //数据验证
             $this->validate($request, [
-                "name" => "required|",
+                "name" => "required|unique:shop_categories",
                 "img" => "required|",
             ]);
             //接收数

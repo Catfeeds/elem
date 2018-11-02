@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'image'),
+    'default' => env('FILESYSTEM_DRIVER', 'oss'),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,6 +46,15 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+        ],
+
+
+        'oss' => [
+            'driver'        => 'oss',
+            'access_id'     => env("ALIYUN_ACCESS_ID"),//账号
+            'access_key'    => env("ALIYUN_ACCESS_KEY"),//密钥
+            'bucket'        =>  env("ALIYUN_BUCKET"),//空间名称
+            'endpoint'      =>  env("ALIYUN_ENDPOINT"), // OSS 外网节点或自定义外部域名
         ],
         'image' => [
             'driver' => 'local',

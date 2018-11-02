@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 Route::domain("admin1.elem.com")->namespace("Admin")->group(function (){
 
@@ -37,7 +37,19 @@ Route::domain("admin1.elem.com")->namespace("Admin")->group(function (){
 
     //用户信息状态
     Route::get("shop/index","ShopController@index")->name("admin.shop.index");
+    Route::any("admin.shop.del/{id}","ShopController@del")->name("admin.shop.del");
     Route::any("shop/changeStatus/{id}","ShopController@changeStatus")->name("admin.shop.changeStatus");
+    //添加商户
+    Route::get("admin.user.index","UserController@index")->name("admin.user.index");
+    Route::any("admin.user.reg","UserController@reg")->name("admin.user.reg");
+    Route::any("admin/user/apply/{id}", "ShopController@apply")->name("admin.user.apply");
+    Route::any("admin.user.del/{id}","ShopController@del")->name("admin.user.del");
+
+    //活动
+    Route::get("active/index", "ActiveController@index")->name("admin.active.index");
+    Route::any("active/add", "ActiveController@add")->name("admin.active.add");
+    Route::any("active/edit/{id}", "ActiveController@edit")->name("admin.active.edit");
+    Route::any("active/del/{id}", "ActiveController@del")->name("admin.active.del");
 
 });
 
@@ -66,7 +78,12 @@ Route::domain("shop1.elem.com")->namespace("Shop")->group(function (){
     Route::any("user/logout", "UserController@logout")->name("shop.user.logout");
 
 
-
+    //图片
+    Route::any("user/upload", "MenuController@upload")->name("shop.user.upload");
+    //前台查看活动列表
+    Route::get("active/index", "ShopController@index")->name("shop.active.index");
+   //商户查看详情
+    Route::any("active/look/{id}", "ShopController@look")->name("shop.active.look");
 
 
 

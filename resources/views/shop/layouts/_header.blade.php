@@ -217,7 +217,7 @@
 
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        {{\Illuminate\Support\Facades\Auth::guard()->user()->name}}
+                        {{--{{\Illuminate\Support\Facades\Auth::user()->name}}--}}
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -233,7 +233,11 @@
                         </li>
                         <!-- Menu Body -->
 
+
+
+
                         <!-- Menu Footer-->
+                        @auth
                         <li class="user-footer">
                             <div class="pull-left">
                                 <a href="{{route("shop.user.change_password")}}" class="btn btn-default btn-flat">修改密码</a>
@@ -242,12 +246,27 @@
                                 <a href="{{route("shop.user.logout")}}" class="btn btn-default btn-flat">退出登录</a>
                             </div>
                         </li>
+                        @endauth
+
+                        @guest
+
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="{{route("shop.user.reg")}}" class="btn btn-default btn-flat">注册</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="{{route("shop.user.login")}}" class="btn btn-default btn-flat">登录</a>
+                                </div>
+                            </li>
+
+                        @endguest
                     </ul>
                 </li>
                 <!-- Control Sidebar Toggle Button -->
                 <li>
                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                 </li>
+
             </ul>
         </div>
     </nav>

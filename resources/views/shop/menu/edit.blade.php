@@ -50,7 +50,7 @@
                 <label  class="col-sm-2 control-label">菜品图片</label>
                 <div class="col-sm-10">
                     <input type="file" class="form-control" name="goods_img">
-                    <img src="/{{$menus->goods_img}}" alt="">
+                    <img src="{{env("ALIYUN_OSS_URL").$menus->goods_img}}" alt="">
                 </div>
             </div>
             <div class="form-group">
@@ -74,7 +74,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-success">添加</button>
+                    <button type="submit" class="btn btn-success">修改</button>
                 </div>
             </div>
         </form>

@@ -35,7 +35,6 @@
     <tr>
         <th>菜品ID</th>
         <th>菜品名</th>
-        <th>所属商家</th>
         <th>所属分类</th>
         <th>价格</th>
         <th>描述</th>
@@ -50,16 +49,14 @@
         <tr>
             <td>{{$menu->id}}</td>
             <td>{{$menu->goods_name}}</td>
-            <td>{{$menu->shop->shop_name}}</td>
             <td>
                 {{$menu->cate->name}}
             </td>
             <td>{{$menu->goods_price}}</td>
             <td>{{$menu->description}}</td>
             <td>{{$menu->month_sales}}</td>
-            <td>
-                <img src="/{{$menu->goods_img}}" height="60" alt="">
-            </td>
+              <td> <img src="{{$menu->goods_img}}" height="60" alt=""></td>
+            {{--<td><img src="{{env("ALIYUN_OSS_URL").$menu->goods_img}}?x-oss-process=image/resize,m_fill,w_40,h_40" height="60" width="60"></td>--}}
             <td>{{$menu->satisfy_count}}</td>
             <td>{{$menu->satisfy_rate}}</td>
             <td>@if($menu->status == 1)

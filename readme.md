@@ -175,7 +175,40 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
        2.添加字段
        3.创建控制器
        4.分页及搜索功能  !!!
-六.
+六.活动的增删改查
+ 
+     1.添加时的编辑器
+       1.安装
+       composer require "overtrue/laravel-ueditor:~1.0"
+       2.添加下面一行到 config/app.php 中 providers 部分  
+         Overtrue\LaravelUEditor\UEditorServiceProvider::class,
+         3.发布配置文件与资源
+         $ php artisan vendor:publish --provider='Overtrue\LaravelUEditor\UEditorServiceProvider'
+         4.这行的作用是引入编辑器需要的 css,js 等文件，所以你不需要再手动去引入它们。
+           
+           @include('vendor.ueditor.assets')
+           5.<!-- 实例化编辑器 -->
+             <script type="text/javascript">
+                 var ue = UE.getEditor('container');
+                 ue.ready(function() {
+                     ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
+                 });
+             </script>
+             
+             <!-- 编辑器容器 -->
+             <script id="container" name="content" type="text/plain"></script>
+             
+             
+七.数据接口
+
+         1.把static,api.js接口文件放到public下
+         2.index文件放到views下
+         3.创建路由
+         Route::get('/', function () {
+             return view('index');
+          4.创建控制器
+          php artisan make:controller Api\ShopController
+          读取数据库所有数据
       
        
 

@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
         public function __construct()
         {
             $this->middleware("auth", [
-                "except" => ["login"]
+                "except" => ["login","reg","logout"]
             ]);
         }
 }

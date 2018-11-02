@@ -9,7 +9,7 @@
         <th>菜品ID</th>
         <th>菜品分类名</th>
         <th>菜品编号</th>
-        <th>所属商家</th>
+
         <th>描述</th>
         <th>是否是默认分类</th>
         <th>操作</th>
@@ -19,7 +19,7 @@
             <td>{{$menu->id}}</td>
             <td>{{$menu->name}}</td>
             <td>{{$menu->type_accumulation}}</td>
-            <td>{{$menu->shop_id}}</td>
+
             <td>{{$menu->description}}</td>
             <td>{{$menu->is_selected}}</td>
             <td>
@@ -29,5 +29,5 @@
         </tr>
     @endforeach
 </table>
-{{$menus->links()}}
+{{--{{$menus->links()}}--}}
 @endsection

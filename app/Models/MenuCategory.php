@@ -10,7 +10,7 @@ class MenuCategory extends Model
     protected $fillable=["name","type_accumulation","shop_id","description","is_selected"];
 
     public function menus(){
-        return $this->hasMany(Menu::class,"shop_id");
+        return $this->hasMany(Menu::class,"category_id");
     }
     public function shop(){
         return $this->belongsTo(Shop::class,"shop_id");
