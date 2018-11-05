@@ -33,19 +33,17 @@
 
                         <div class="col-sm-10">
                             <input type="password" class="form-control" id="inputPassword3" placeholder="用户密码" name="password">
+
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox"> Remember me
-                                </label>
-                            </div>
+                        <label class="col-sm-2 control-label">角色</label>
+                        <div class="col-sm-10">
+                            @foreach( $roles as $per)
+                                <input type="checkbox" name="role[]"  value="{{$per->id}}" >{{$per->name}}
+                            @endforeach
                         </div>
                     </div>
-                </div>
-                <!-- /.box-body -->
 
 
                 <div class="box-footer">

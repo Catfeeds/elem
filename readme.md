@@ -209,6 +209,211 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
           4.创建控制器
           php artisan make:controller Api\ShopController
           读取数据库所有数据
+ 八.添加权限及角色
       
-       
+      1.安装 composer require spatie/laravel-permission -vvv
+      
+      2.生成数据迁移 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="migrations"
+      
+      3.给权限表可以加个 intro 字段
+      
+      4.执行数据迁移 php artisan migrate
+      
+      5. 生成配置文件 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
+      6.admin 模型中
+        class Admin extends Authenticatable
+        {
+            use HasRoles;
+            protected $guard_name = 'admin'; // 使用任何你想要的守卫
+            protected $fillable=['name','password','email'];
+        }
+        
+        
+        
+ 1).添加权限
+ 
+ 
+        7.PerController中
+         public function add(Request $request)
+            {
+                if ($request->isMethod("post")){
+        
+        
+                    $data=$request->post();
+                    $data['guard_name']="admin";
+                    Permission::create($data);
+                }
+                return view("admin.per.add");
+        
+        
+            }
+    8.RoleContrller
+      public function add(Request $request)
+        {
+    
+            if ($request->isMethod("post")){
+    
+                //1.接收参数 并处理数据
+               $pers=$request->post('pers');
+                //2.添加角色
+                $role=Role::create([
+                    "name"=>$request->post("name"),
+                    "guard_name"=>"admin"
+                ]);
+                //3. 给角色同步权限
+                if ($pers){
+                    $role->syncPermissions($pers);
+                }
+            }
+    
+    
+            //得到所有权限
+            $pers = Permission::all();
+    
+    
+            return view("admin.role.add",compact("pers"));
+    
+        }
+        9.BaseController
+        class BaseController extends Controller
+        {
+            //
+            public function __construct()
+            {
+                $this->middleware("auth:admin", [
+                    "except" => ["login"]
+                ]);
+        
+                //有没有权限
+                $this->middleware(function ($request,\Closure $next){
+                    //如果没有权限 停在这里
+                       //得到当前访问路由
+        
+                    $route=Route::currentRouteName();
+        //            dd($route);
+                      //设置一个白名单
+                    $allow=[
+                        "admin.login",
+                        "admin.logout"
+                    ];
+                    //判断当前登录用户有没有权限
+                     if(!in_array($route,$allow) && !Auth::guard("admin")->user()->can($route) && Auth::guard("admin")->id()!==2){
+                         exit(view("admin.gun"));
+                     }
+                     return $next($request);
+                });
+            }
+        }
+2）修改权限PerController
 
+       //修改权限
+       public function edit(Request $request,$id){
+          $pers=Permission::find($id);
+       //   dd($pers);
+          //判断提交方式
+           if ($request->isMethod("post")) {
+               //接收参数
+               $data=$request->post();
+               $data['guard_name']="admin";
+             if($pers->update($data)){
+                 session()->flash("success", "修改成功");
+                 return redirect("per/index");
+             }
+           }
+           return view("admin.per.edit",compact("pers"));
+       
+       }
+    
+    
+3).权限修改
+ 视图
+ 
+      <div class="form-group">
+                  <label class="col-sm-2 control-label">权限</label>
+                  <div class="col-sm-10">
+                      @foreach( $pers as $per)
+                      <input type="checkbox" name="pers[]"  value="{{$per->id}}" {{in_array($per->id,$rol)?'checked':""}}>
+                      {{$per->intro}}
+                      @endforeach
+                  </div>
+              </div>
+       
+       
+  RoleController
+       
+       /修改角色
+       public function edit(Request $request,$id){
+       
+               //得到当前角色
+           $roles=Role::find($id);
+           $rol = $roles->permissions()->pluck("id")->toArray();
+       //    dd($rol);
+       
+           //判断提交方式
+           if ($request->isMethod("post")) {
+               //接收参数
+                $data['name']=$request->post('name');
+                //创建角色
+               $roles->update($data);
+               //给角色添加权限 $role->syncPermissions(['权限名1','权限名2']);
+               $roles->syncPermissions($request->post('pers'));
+               //跳转
+               session()->flash("success", "修改成功");
+               return redirect("role/index");
+           }
+           //得到当前权限
+           $pers=Permission::all();
+           return view("admin.role.edit",compact("roles","pers","rol"));
+       }
+
+4）.添加权限
+    
+    //添加角色
+        public function add(Request $request){
+            if ($request->isMethod("post")) {
+                //接收参数并处理数据
+                 $pers=$request->post('pers');
+    //
+    //            dd($data['pers']);
+                 // 添加角色
+                $role=Role::create([
+                    "name"=>$request->post("name"),
+                    "guard_name"=>"admin"
+                ]);
+    //            dd($pers);
+                //给角色同步权限
+                if($pers){
+                    $role->syncPermissions($pers);
+                }
+            }
+            //得到所有权限
+             $pers=Permission::all();
+    //
+            return view("admin.role.add",compact("pers"));
+        } 
+视图
+       
+       
+       <div class="form-group">
+                   <label class="col-sm-2 control-label">权限</label>
+                   <div class="col-sm-10">
+                       @foreach( $pers as $per)
+                       <input type="checkbox" name="pers[]"  value="{{$per->id}}" >{{$per->intro}}
+                      @endforeach
+                   </div>
+               </div>
+               
+5）.给指定用户加角色
+
+     AdminController:
+    $admin->syncRoles($request->post('role'));
+    
+    添加视图：
+     <div class="form-group">
+                            <label class="col-sm-2 control-label">角色</label>
+                            <div class="col-sm-10">
+                                @foreach( $roles as $per)
+                                    <input type="checkbox" name="role[]"  value="{{$per->id}}" >{{$per->name}}
+                                @endforeach
+                            </div>
+                        </div>

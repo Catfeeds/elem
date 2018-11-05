@@ -50,6 +50,33 @@ Route::domain("admin1.elem.com")->namespace("Admin")->group(function (){
     Route::any("active/add", "ActiveController@add")->name("admin.active.add");
     Route::any("active/edit/{id}", "ActiveController@edit")->name("admin.active.edit");
     Route::any("active/del/{id}", "ActiveController@del")->name("admin.active.del");
+    //订单
+    Route::any("order/day", "OrderController@day")->name("admin.order.day");
+    Route::any("order/month", "OrderController@month")->name("admin.order.month");
+    //菜品统计
+    Route::any("order/mday", "OrderController@mday")->name("admin.order.mday");
+    Route::any("order/mmonth", "OrderController@mmonth")->name("admin.order.mmonth");
+    Route::any("order/total", "OrderController@total")->name("admin.order.total");
+
+     //会员
+    Route::get("member/index", "MemberController@index")->name("admin.member.index");
+    Route::any("member/status/{id}", "MemberController@status")->name("admin.member.status");
+
+    //添加权限
+    Route::any("per/add", "PerController@add")->name("admin.per.add");
+    Route::any("per/index", "PerController@index")->name("admin.per.index");
+    Route::any("per/edit/{id}", "PerController@edit")->name("admin.per.edit");
+    Route::any("per/del/{id}", "PerController@del")->name("admin.per.del");
+
+
+    //添加角色
+    Route::any("role/add", "RoleController@add")->name("admin.role.add");
+    Route::any("role/index", "RoleController@index")->name("admin.role.index");
+    Route::any("role/edit/{id}", "RoleController@edit")->name("admin.role.edit");
+    Route::any("role/del/{id}", "RoleController@del")->name("admin.role.del");
+
+   //权限不够页面
+    Route::any("admin/gun", "RoleController@gun")->name("admin.admin.gun");
 
 });
 
@@ -84,7 +111,15 @@ Route::domain("shop1.elem.com")->namespace("Shop")->group(function (){
     Route::get("active/index", "ShopController@index")->name("shop.active.index");
    //商户查看详情
     Route::any("active/look/{id}", "ShopController@look")->name("shop.active.look");
-
-
-
+  //订单管理
+    Route::get("order/index", "OrderController@index")->name("shop.order.index");
+    Route::get('order/changeStatus/{id}/{status}', "OrderController@changeStatus")->name('order.changeStatus');
+    //订单按日统计
+    Route::any("order/day", "OrderController@day")->name("shop.order.day");
+    Route::any("order/month", "OrderController@month")->name("shop.order.month");
+    //菜品按日统计
+    Route::any("morder/mday", "OrderController@mday")->name("shop.morder.mday");
+    Route::any("morder/mmonth", "OrderController@mmonth")->name("shop.morder.mmonth");
+    Route::any("order/total", "OrderController@total")->name("shop.order.total");
+    Route::any("morder/menuTotal", "OrderController@menuTotal")->name("shop.morder.menuTotal");
     });

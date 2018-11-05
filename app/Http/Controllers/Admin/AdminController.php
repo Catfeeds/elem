@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use function PhpParser\filesInDir;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends BaseController
 {
@@ -37,12 +38,17 @@ class AdminController extends BaseController
             $data['password']=bcrypt($data['password']);
             //创建用户
             $admin=Admin::create($data);
-            //通过用户找出所有角色
+            //给用户添加角色 同步角色
+
+            $admin->syncRoles($request->post('role'));
             // $admin->roles();
             //跳转并提示
             return redirect()->route('admin.admin.index')->with('success','创建'.$admin->name."成功");
         }
-        return view('admin.admin.add');
+
+        $roles=Role::all();
+
+        return view('admin.admin.add',compact("roles"));
     }
 
    //删除平台管理员
@@ -62,6 +68,9 @@ class AdminController extends BaseController
     {
         //找到id
       $admin=Admin::find($id);
+        $rol = $admin->getRoleNames()->toArray();
+//        dd($rol);
+
         //判断提交方式
         if ($request->isMethod("post")) {
             //数据验证
@@ -73,13 +82,17 @@ class AdminController extends BaseController
             //接收数
             $data = $request->post();
 //              dd($data);
+            //给用户添加角色 同步角色
+
+            $admin->syncRoles($request->post('role'));
             if ($admin->update($data)) {
                 session()->flash("success", "修改成功");
                 return redirect()->route("admin.admin.index");
             }
         } else {
+            $roles=Role::all();
 
-            return view("admin.admin.edit", compact("admin"));
+            return view("admin.admin.edit", compact("admin","roles","rol"));
         }
 
     }

@@ -7,7 +7,7 @@ use App\Models\Menu;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CartController extends Controller
+class CartController extends BaseController
 {
     //
     public function index(Request $request){
@@ -40,7 +40,7 @@ class CartController extends Controller
     public function add(Request $request){
         //验证
         //清空购物车
-        Cart::where($request->post('user_id'))->delete();
+//        Cart::where($request->post('user_id'))->delete();
        //接收参数
         $goods=$request->post('goodsList');
         $counts=$request->post('goodsCount');

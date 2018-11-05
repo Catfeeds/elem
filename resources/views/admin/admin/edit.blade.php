@@ -28,6 +28,15 @@
                             <input type="email" class="form-control" id="inputEmail3" placeholder="Email" name="email" value="{{$admin->email}}">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">角色</label>
+                        <div class="col-sm-10">
+                            @foreach( $roles as $role)
+                                <input type="checkbox" name="role[]"  value="{{$role->id}}" {{in_array($role->name,$rol)?'checked':""}}>
+                                {{$role->name}}
+                            @endforeach
+                        </div>
+                    </div>
 
 
                 <!-- /.box-body -->

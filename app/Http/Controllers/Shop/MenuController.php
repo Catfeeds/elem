@@ -163,6 +163,27 @@ class MenuController extends BaseController
             ///var_dump($url);
         }
 
+
     }
+  //按日统计菜品销售量
+    public function month(Request $request){
+        $shopId=Auth::user()->shop->id;
+        $query=Menu::where("shop_id",$shopId)->select(DB::raw("DATE_FORMAT(created_at, '%Y-%m') as day,SUM(total) AS money,count(*) AS count"))->groupBy("day")->orderBy("day", 'desc')->limit(30);
+        //接收参数
+        $start=$request->input("start");
+        $end=$request->input("end");
+        //如果有起始时间
+        if($start!==null){
+            $query->whereDate("created_at", ">=", $start);
+        }
+        if ($end !== null) {
+            $query->whereDate("created_at", "<=", $end);
+        }
+        //得到每月数据
+        $orders=$query->get();
+        return view("shop.order.month",compact("orders"));
+    }
+
+
 
 }

@@ -12,7 +12,7 @@ use Mrgoon\AliSms\AliSms;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Stmt\TraitUseAdaptation\Alias;
 
-class MemberController extends Controller
+class MemberController extends BaseController
 {
     //用户注册
     public function reg( Request $request )
@@ -122,7 +122,7 @@ class MemberController extends Controller
         return $data;
 
     }
-//重置
+//忘记密码
 public function forget(Request $request){
    //接收参数
     $data=$request->post();
@@ -151,6 +151,34 @@ public function forget(Request $request){
 
 }
 //修改密码
+public function change( Request $request){
+        $data=$this->validate($request,[
+           "oldPassword"=>"required",
+            "newPassword"=>"required",
+            'id'=>"required"
+        ]);
+    //旧密码和数据库密码对比
+    $oldPassword=$request->post('oldPassword');
+    $rePassword=$request->post('newPassword');
+//加密
+    $new=Hash::make($rePassword);
+    $member = Member::where("id", $data['id'])->first();
+//hash旧密码对比
+    if(Hash::check($oldPassword,$member->password)){
+     //修改密码
+        Member::where('id',$data['id'])->update(['password'=>$new]);
+        $data=[
+            "status"=>"true",
+            "message"=>"修改成功"
+        ];
+    }else{
+        $data=[
+            "status"=>"false",
+            "message"=>"修改失败"
+        ];
+    }
+return $data;
+}
 
 //用户信息
  public function detail(Request $request){

@@ -42,11 +42,45 @@
                     <li><a href=""><i class="fa fa-circle-o"></i>其他 </a></li>
                 </ul>
             </li>
-
-
-
             <li class="header">火爆活动</li>
             <li><a href="{{route("shop.active.index")}}"><i class="fa fa-circle-o text-red"></i> <span>活动列表</span></a></li>
+
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>订单统计</span>
+                    <span class="pull-right-container">
+                   <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{route("shop.order.index")}}"><i class="fa fa-circle-o text-red"></i> <span>订单列表</span></a></li>
+                    <li><a href="{{route("shop.order.day")}}"><i class="fa fa-circle-o text-red"></i> <span>按日统计</span></a></li>
+                    <li><a href="{{route("shop.order.month")}}"><i class="fa fa-circle-o text-red"></i> <span>按月统计</span></a></li>
+                    <li><a href="{{route("shop.order.total")}}"><i class="fa fa-circle-o text-red"></i> <span>总计</span></a></li>
+                </ul>
+            </li>
+
+
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>菜品销量统计</span>
+                    <span class="pull-right-container">
+                   <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{route("shop.morder.mday")}}"><i class="fa fa-circle-o text-red"></i> <span>按日统计</span></a></li>
+                    <li><a href="{{route("shop.morder.mmonth")}}"><i class="fa fa-circle-o text-red"></i> <span>按月统计</span></a></li>
+                    <li><a href="{{route("shop.morder.menuTotal")}}"><i class="fa fa-circle-o text-red"></i> <span>总计</span></a></li>
+                </ul>
+            </li>
+
+
+
+
+
+
+
 
         </ul>
     </section>
