@@ -5,8 +5,6 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-
-
                     <div class="box-tools">
 
                         <form action="" class="form-inline">

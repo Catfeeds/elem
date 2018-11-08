@@ -1,9 +1,6 @@
 @extends("admin.layouts.main")
 @section("title","会员列表")
 @section("content")
-
-
-
     <table class="table">
         <tr>
             <th>ID</th>

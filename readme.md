@@ -417,3 +417,211 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
                                 @endforeach
                             </div>
                         </div>
+九.邮件发送
+
+
+    1.首先在自己邮箱的设置里  账户设置开启邮箱服务得到授权码 
+    2.在env里配置
+    MAIL_DRIVER=smtp
+    MAIL_HOST=smtp.qq.com
+    MAIL_PORT=465
+    MAIL_USERNAME=1241672563@qq.com
+    MAIL_PASSWORD=srmfatbbxpfbhefc
+    MAIL_ENCRYPTION=ssl
+    MAIL_FROM_ADDRESS=1241672563@qq.com
+    MAIL_FROM_NAME=hellow
+    3.在web路由里
+    /发送邮件
+    Route::get('test', function () {
+        //
+        $shopName="牛牛牛火锅";
+        $to='17723505839@163.com';
+        $subject=$shopName.'通知';
+        \Illuminate\Support\Facades\Mail::send(
+            'emails.shop',
+            compact("shopName"),
+            function ($message) use($to, $subject) {
+                $message->to($to)->subject($subject);
+            }
+        );
+    });
+十.导航栏
+  
+      添加导航
+        
+        
+         //添加
+        public function add(Request $request){
+              if($request->isMethod("post")){
+                  $this->validate($request,[
+                   'name'=>'required',
+                  ]);
+                  if($request->post('url')==null){
+                      $data=$request->except('url');
+                  }else{
+                      $data=$request->post();
+                  }
+                  $nav=Nav::create($data);
+                 return redirect()->refresh()->with('success','添加'.$nav->name.'成功');
+              }
+              //得到所有路由
+            $routes=Route::getRoutes();
+            //定义数组
+            $urls=[];
+            foreach ($routes as $k=>$value){
+                //dd($value->action);
+                if ($value->action['namespace']==="App\Http\Controllers\Admin"){
+                    if (isset($value->action['as'])){
+                        $urls[]=$value->action['as'];
+                    }
+                }
+            }
+            $navs=Nav::where('parent_id',0)->orderBy('sort')->get();
+        //    dd($navs);
+            return view('admin.nav.add',compact('navs','urls'));
+        }
+        
+        }
+   
+   
+   header视图
+      
+      
+      <ul class="nav navbar-nav">
+                      <li class="active"><a href="#">首页 <span class="sr-only">(current)</span></a></li>
+      
+                      @foreach(\App\Models\Nav::where('parent_id',0)->get() as $k1=>$v1)
+                      <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$v1->name}} <span class="caret"></span></a>
+                          <ul class="dropdown-menu">
+                              @foreach(\App\Models\Nav::where('parent_id',$v1->id)->get() as $k2=>$v2)
+                              <li><a href="{{route($v2->url)}}" >{{$v2->name}}</a></li>
+                              @endforeach
+                          </ul>
+                      </li>
+                      @endforeach
+  
+    
+十一. 抽奖
+    
+    平台
+    
+  抽奖活动管理[报名人数限制、报名时间设置、开奖时间设置]
+  
+    做简单的增删改查
+ 抽奖报名管理[可以查看报名的账号列表]
+    
+  活动奖品管理[开奖前可以给该活动添加、修改、删除奖品]
+  
+    首先做简单的增删改查
+    
+ 开始抽奖[根据报名人数随机抽取活动奖品,将活动奖品和报名的账号随机匹配]
+       
+ 
+            public function open(Request $request,$id)
+            {
+                //1.通过当前活动ID把已经报名的用户ID取出来、
+                $userIds = DB::table('event_users')->where('event_id', $id)->pluck('user_id')->toArray();
+       //           dd($userId);
+                //打乱ID
+                shuffle($userIds);
+                //找出当前活动的奖品 并随机打乱
+                $prizes = EventPrize::where("event_id", $id)->get()->shuffle();
+       //         dd($prizes);
+                //奖品表
+                foreach ($prizes as $k => $prize) {
+                    //给用户赋值
+                    $prize->user_id = $userIds[$k];
+                    //给中奖用户发邮件
+                   //得到用户信息
+                    $userId=User::find($prize->user_id);
+       
+                    //得到用户邮箱
+                    $email=$userId['email'];
+                    //用户名字
+                    $name =$userId['name'];
+                    //
+                    $shopName=$name;
+                    $to=$email;
+                    $subject=$shopName.'中奖通知';
+                    \Illuminate\Support\Facades\Mail::send(
+                        'emails.prize',
+                        compact("shopName"),
+                        function ($message) use($to, $subject) {
+                            $message->to($to)->subject($subject);
+                        }
+                    );
+       
+                    //保存修改状态
+                    $prize->save();
+       
+                 
+       
+                }
+                //修改活动状态
+                $event=Event::findOrFail($id);
+                $event->is_prize=1;
+                $event->save();
+                return redirect()->route('admin.event.index')->with('success','开奖成功');
+            }
+
+    抽奖完成时，给中奖商户发送中奖通知邮件
+       
+  给中奖用户发邮件
+  
+  
+    //得到用户信息
+    $userId=User::find($prize->user_id);
+              
+    //得到用户邮箱                         $email=$userId['email'];
+       //用户名字
+    $name =$userId['name'];
+                           //
+    $shopName=$name;
+     $to=$email;
+    $subject=$shopName.'中奖通知';           \Illuminate\Support\Facades\Mail::send(
+    'emails.prize',
+     compact("shopName"),
+      function ($message) use($to, $subject) {                        $message->to($to)->subject($subject);
+                               }
+                           );
+   
+  商户
+    
+    抽奖活动列表
+    
+  报名抽奖活动
+          
+          
+          //报名抽奖活动
+              public function sign($id){
+                  $event=Event::find($id);
+          //        dd (111);
+                 //得到当前报名人数
+                  $num=EventUser::where("event_id",$event->id)->count();
+          
+                  $user=EventUser::where("user_id",Auth::user()->id)->first();
+                  //dd($user);
+                  if($num > $event->num ){
+                      return back()->with("success","报名已满");
+                  }
+                  //得到当前用户ID
+                  $data['user_id']=Auth::user()->id;
+          //        dd($data['user_id']);
+                  if(isset($user->user_id)){
+                      return back()->with("warning","你已报名");
+                  }
+                  EventUser::create($data);
+                  return back()->with("success","报名成功 等待开奖");
+          
+              }
+   查看抽奖活动结果
+      
+       public function result($id){
+              $eventPrizes=EventPrize::where("event_id",$id)->get();
+              return view("shop.event.result",compact("eventPrizes"));
+      
+          }
+
+    
+  

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class ShopController extends BaseController
 {
@@ -34,9 +35,26 @@ class ShopController extends BaseController
     public function changeStatus($id)
     {
         //得到一个对象
-        $shop = Shop::findOrFail($id);
-        $shop->status = 1;
-        $shop->save();
+        $data = Shop::findOrFail($id);
+        $data->status = 1;
+        $data->save();
+
+        $user=User::where('id',$data->user_id)->first();
+
+        $shopName=$data->shop_name;
+        $to = $user->email;
+        // dd($to);
+        $subject =$shopName. '审核通知';
+
+        Mail::send(
+            'emails.shop',
+            compact("shopName"),
+            function ($message) use($to, $subject) {
+//                dd($message);
+                $message->to($to)->subject($subject);
+            }
+        );
+
         return back()->with("success", "通过审核");
     }
   //删除商户信息

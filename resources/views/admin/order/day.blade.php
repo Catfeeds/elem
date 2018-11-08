@@ -28,13 +28,14 @@
                         <tbody>
                         <tr>
                             <th>日期</th>
-                            <th>订单数</th>
+                            <th>订单总金额</th>
                             <th>店铺名</th>
                         </tr>
                         @foreach($datas as $data)
                             <tr>
                                 <td>{{$data->date}}</td>
                                 <td>{{$data->nums}}</td>
+
                                 <td>{{$data->shop->shop_name}}</td>
 
 

@@ -17,49 +17,51 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">首页 <span class="sr-only">(current)</span></a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理员及活动 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{route("admin.admin.index")}}" >管理员</a></li>
-                        <li><a href="{{route("admin.active.index")}}" >活动管理</a></li>
-                        <li><a href="{{route("admin.member.index")}}" >会员管理</a></li>
-                    </ul>
-                </li>
 
+                @foreach(\App\Models\Nav::where('parent_id',0)->get() as $k1=>$v1)
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">商户管理 <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$v1->name}} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{route("admin.shopCate.index")}}" >店铺分类</a></li>
-                        <li><a href="{{route("admin.shop.index")}}" >用户状态</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="{{route("admin.user.index")}}">商户管理</a></li>
+                        @foreach(\App\Models\Nav::where('parent_id',$v1->id)->get() as $k2=>$v2)
+                        <li><a href="{{route($v2->url)}}" >{{$v2->name}}</a></li>
+                        @endforeach
+                    </ul>
+                </li>
+                @endforeach
+                {{--<li class="dropdown">--}}
+                    {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">商户管理 <span class="caret"></span></a>--}}
+                    {{--<ul class="dropdown-menu">--}}
+                        {{--<li><a href="{{route("admin.shopCate.index")}}" >店铺分类</a></li>--}}
+                        {{--<li><a href="{{route("admin.shop.index")}}" >用户状态</a></li>--}}
+                        {{--<li role="separator" class="divider"></li>--}}
+                        {{--<li><a href="{{route("admin.user.index")}}">商户管理</a></li>--}}
 
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">订单统计 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{route("admin.order.day")}}" >订单日统计</a></li>
-                        <li><a href="{{route("admin.order.month")}}" >订单月统计</a></li>
-                        <li><a href="{{route("admin.order.total")}}" >订单总计</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">菜品销量统计 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{route("admin.order.mday")}}" >菜品日统计</a></li>
-                        <li><a href="" >菜品月统计</a></li>
-                    </ul>
-                </li>
+                    {{--</ul>--}}
+                {{--</li>--}}
+                {{--<li class="dropdown">--}}
+                    {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">订单统计 <span class="caret"></span></a>--}}
+                    {{--<ul class="dropdown-menu">--}}
+                        {{--<li><a href="{{route("admin.order.day")}}" >订单日统计</a></li>--}}
+                        {{--<li><a href="{{route("admin.order.month")}}" >订单月统计</a></li>--}}
+                        {{--<li><a href="{{route("admin.order.total")}}" >订单总计</a></li>--}}
+                    {{--</ul>--}}
+                {{--</li>--}}
+                {{--<li class="dropdown">--}}
+                    {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">菜品销量统计 <span class="caret"></span></a>--}}
+                    {{--<ul class="dropdown-menu">--}}
+                        {{--<li><a href="{{route("admin.order.mday")}}" >菜品日统计</a></li>--}}
+                        {{--<li><a href="" >菜品月统计</a></li>--}}
+                    {{--</ul>--}}
+                {{--</li>--}}
 
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">权限及角色管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{route("admin.per.index")}}" >权限列表</a></li>
-                        <li><a href="{{route("admin.role.index")}}" >角色管理</a></li>
+                {{--<li class="dropdown">--}}
+                    {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">权限及角色管理 <span class="caret"></span></a>--}}
+                    {{--<ul class="dropdown-menu">--}}
+                        {{--<li><a href="{{route("admin.per.index")}}" >权限列表</a></li>--}}
+                        {{--<li><a href="{{route("admin.role.index")}}" >角色管理</a></li>--}}
 
-                    </ul>
-                </li>
+                    {{--</ul>--}}
+                {{--</li>--}}
 
             </ul>
             <!-- <form class="navbar-form navbar-left">

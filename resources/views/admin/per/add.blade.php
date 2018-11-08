@@ -7,7 +7,11 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">名称</label>
             <div class="col-sm-10">
-                <input type="text" name="name" class="form-control">
+                <select name="name" class="form-control">
+                    @foreach($urls as $url)
+                        <option value="{{$url}}">{{$url}}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
 

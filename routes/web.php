@@ -14,6 +14,24 @@
 Route::get('/', function () {
     return view('index');
 });
+
+//发送邮件
+Route::get('test', function () {
+    //
+       $shopName="牛牛牛火锅";
+    $to='17723505839@163.com';
+    $subject=$shopName.'通知';
+    \Illuminate\Support\Facades\Mail::send(
+        'emails.shop',
+        compact("shopName"),
+        function ($message) use($to, $subject) {
+            $message->to($to)->subject($subject);
+        }
+    );
+
+});
+
+
 Route::domain("admin1.elem.com")->namespace("Admin")->group(function (){
 
 
@@ -78,6 +96,32 @@ Route::domain("admin1.elem.com")->namespace("Admin")->group(function (){
    //权限不够页面
     Route::any("admin/gun", "RoleController@gun")->name("admin.admin.gun");
 
+    //导航栏
+    Route::any("nav/add", "NavController@add")->name("admin.nav.add");
+
+    //菜单日月销售统计
+    Route::any("menu/mday", "OrderController@mday")->name("admin.menu.mday");
+    Route::any("menu/mmonth", "OrderController@mmonth")->name("admin.menu.mmonth");
+    Route::any("menu/all", "OrderController@all")->name("admin.menu.all");
+    //抽奖活动
+    Route::any("event/index", "EventController@index")->name("admin.event.index");
+    Route::any("event/add", "EventController@add")->name("admin.event.add");
+    Route::any("event/edit/{id}", "EventController@edit")->name("admin.event.edit");
+    Route::any("event/del/{id}", "EventController@del")->name("admin.event.del");
+    //活动开奖
+    Route::any("event/open/{id}", "EventController@open")->name("admin.event.open");
+    //中奖
+    Route::any("event/result/{id}", "EventController@result")->name("admin.event.result");
+
+
+     //抽奖活动奖品
+    Route::get("event_prize/index", "EventPrizeController@index")->name("admin.event_prize.index");
+    Route::any("event_prize/add", "EventPrizeController@add")->name("admin.event_prize.add");
+    Route::any("event_prize/edit/{id}", "EventPrizeController@edit")->name("admin.event_prize.edit");
+    Route::any("event_prize/del/{id}", "EventPrizeController@del")->name("admin.event_prize.del");
+
+
+
 });
 
 
@@ -122,4 +166,11 @@ Route::domain("shop1.elem.com")->namespace("Shop")->group(function (){
     Route::any("morder/mmonth", "OrderController@mmonth")->name("shop.morder.mmonth");
     Route::any("order/total", "OrderController@total")->name("shop.order.total");
     Route::any("morder/menuTotal", "OrderController@menuTotal")->name("shop.morder.menuTotal");
+
+
+    //抽奖活动
+    Route::any("event/index", "EventController@index")->name("shop.event.index");
+    Route::any("event/sign/{id}", "EventController@sign")->name("shop.event.sign");
+   //中奖情况
+    Route::get("event/result/{id}", "EventController@result")->name("shop.event.result");
     });

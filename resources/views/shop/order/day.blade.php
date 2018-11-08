@@ -29,6 +29,7 @@
                         <tr>
                             <th>日期</th>
                             <th>订单数</th>
+
                             <th>收入</th>
                         </tr>
                         @foreach($orders as $order)
@@ -36,6 +37,7 @@
                                 <td>{{$order->day}}</td>
 
                                 <td>{{$order->count}}</td>
+
                                 <td>{{$order->money}}</td>
 
                             </tr>
